@@ -1,7 +1,7 @@
 ---
 name: test-runner
-description: "Use this agent when the user requests to run tests, check test results, or verify code functionality. This includes:\\n\\n- Explicit requests to run tests (e.g., \"运行测试\", \"run tests\", \"执行测试用例\")\\n- Requests to verify code after making changes (e.g., \"检查代码是否正常\", \"验证功能\")\\n- Proactively triggering tests after writing significant new code or making substantial changes\\n\\nExamples:\\n\\n<example>\\nContext: The user has just completed implementing a new feature.\\nuser: \"我已经写完了用户登录功能的代码\"\\nassistant: \"好的，我已经帮你完成了用户登录功能的实现。现在让我使用 test-runner agent 来运行测试，确保代码功能正常。\"\\n<uses Task tool to launch test-runner agent>\\n<commentary>\\nSince a significant feature was completed, proactively run tests to verify the implementation.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: The user asks to run tests.\\nuser: \"请帮我运行一下测试项目\"\\nassistant: \"我将使用 test-runner agent 来运行 test 目录下的所有测试项目并返回结果。\"\\n<uses Task tool to launch test-runner agent>\\n<commentary>\\nUser explicitly requested to run tests, use the test-runner agent.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: The user asks about code correctness.\\nuser: \"这段代码写得对不对？\"\\nassistant: \"让我帮你检查一下这段代码的正确性。我将使用 test-runner agent 运行相关测试来验证。\"\\n<uses Task tool to launch test-runner agent>\\n<commentary>\\nUser is asking to verify code correctness, run tests to check.\\n</commentary>\\n</example>"
-tools: Glob, Grep, Read, WebFetch, WebSearch
+description: "Use this agent when the user requests to run tests, check test results, or verify code functionality."
+tools: Glob, Grep, Read, WebFetch, WebSearch, Bash
 model: sonnet
 color: yellow
 ---
@@ -48,8 +48,7 @@ You are an expert test execution specialist with deep knowledge of testing frame
 
 ### Execution Commands (choose based on detected framework):
 
-- **Python pytest**: `pytest test/ -v --tb=short`
-- **Python unittest**: `python -m unittest discover -s test/ -v`
+- **Python unittest**: `python3 -m unittest discover -s test/ -v`
 - **Node.js Jest**: `npm test` or `jest`
 - **Node.js Vitest**: `npm run test` or `vitest run`
 - **Node.js Mocha**: `npm test` or `mocha test/`
@@ -136,5 +135,9 @@ This project uses a front-end/back-end separation architecture:
 - Ensure PDF test files exist in `backend/pdfs/` directory before running API tests
 - Cross-origin (CORS) requests must be properly configured between frontend and backend
 - Frontend hot-reload is enabled; tests may need to account for this during development
+
+**Backend Test Coverage (test/backend/)**
+- **test_openai.py** - OpenAIProvider tests: initialization, API endpoint construction, successful chat completion, kwargs (temperature, max_tokens), invalid messages, timeout, connection errors, HTTP errors, invalid response format, connection test (success/failure)
+- **test_ollama.py** - OllamaProvider tests: initialization, successful chat completion, parameter handling (temperature, max_tokens, top_p), invalid messages, timeout, connection errors, connection test (service not running, success, failure)
 
 When in doubt about how to execute tests or interpret results, explicitly state your uncertainty and ask for clarification from the user. Your goal is to provide accurate, comprehensive test results that help the user understand the health of their codebase.
