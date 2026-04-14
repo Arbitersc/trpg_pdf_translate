@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "WebFetch(domain:docs.siliconflow.cn)",
+      "Bash(chmod +x:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "WebFetch(domain:mineru.net)",
+      "Bash(source:*)",
+      "Bash(PYTHONPATH=/root/translate_trpg_pdf/src python:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}
